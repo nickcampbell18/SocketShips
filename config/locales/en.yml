@@ -1,0 +1,8 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  hit_own_ship: "They struck your %{ship} (%{cell})"
+  hit_their_ship: "Woo! You hit their %{ship} (%{cell})"
+  lost_own_ship: "They sunk your %{ship}"
+  lost_their_ship: "You sunk their %{ship}"
