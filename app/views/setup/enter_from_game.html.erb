@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1>Start a new game of Rubyships</h1>
+  <h1>Join <%= @g.name %></h1>
 </div>
 <style>
 	#homeform input[type="text"] {
@@ -9,13 +9,7 @@
 </style>
 <form class="form-stacked" method="post" id="homeform">
 		<input id="tokentag" type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
-    <div class="clearfix">
-      <label for="gameName">The name of your epic battle</label>
-      <div class="input">
-        <input class="span6" id="gameName" name="gameName" value="<%= params[:gameName] %>" type="text" maxlength="100">
-        <span class="help-inline">e.g. Battle for Tokyo</span>
-      </div>
-    </div><!-- /clearfix -->
+		
     <div class="clearfix">
       <label for="userName">Your name (as shown to the loser)</label>
       <div class="input">
@@ -24,6 +18,6 @@
       </div>
     </div><!-- /clearfix -->
     <div>
-      <input type="submit" class="btn primary" value="Continue &gt;">&nbsp;<button type="reset" class="btn">Cancel</button>
+      <input type="submit" class="btn primary" value="Continue &gt;">&nbsp;<a class="btn" href="/home">Cancel</a>
     </div>
 </form>

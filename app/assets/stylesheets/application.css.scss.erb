@@ -1,0 +1,25 @@
+/*
+ *= require_self
+ *= require_tree . 
+ *= require twitter/bootstrap
+*/
+#playerslist {
+	li.ready {
+		color: green;
+	}
+	li.placing {
+		color: blue;
+	}
+}
+
+td.occupied {
+	background-color: #08b5fb;
+}
+
+/* gameinfo */
+p.admin {
+	background: url('<%= asset_path "admin-icon.png" %>') no-repeat right center;
+}
+div.user-div p {
+	margin-right: 0!important;
+}

@@ -1,0 +1,36 @@
+<style>
+	#game-code {
+		font-size: 180%;
+	}
+</style>
+<div class="page-header">
+	<h1>Step 1: Invite your friends</h1>
+</div>
+<ul class="breadcrumb">
+  <li class="active">Step 1: Get invite link</li>
+</ul>
+
+<div class="row">
+	<div class="span12">
+
+	<h3>What good is a game without players?</h3>
+	<p>Here is the link to pass to your friend to let them play with you:</p>
+	<div class="alert-message block-message success">
+		<p id="game-code"><a><%= @g.uuid %></a></p>
+	</div>
+	
+	<h3>Also..</h3>
+	<p>This is your login code. Make a note of this number. If you accidentally close the browser, or move computers, you can use this code from the home screen to get back into the game.</p>
+	<div class="alert-message block-message error">
+		<p id="game-code"><%= @p.uuid %></p>
+	</div>
+
+	</div>
+</div>
+
+<div class="row" style="margin-top: 80px;">
+	<div class="span16">
+		<a class="btn primary" href="/step2">Step 2: Setup your ships</a>
+		<a class="btn" href="/logout">Cancel</a>
+	</div>
+</div>

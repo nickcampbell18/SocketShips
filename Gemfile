@@ -1,17 +1,19 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.1.0'
-
 gem 'pusher'
-gem 'devise'
-gem 'omniauth'
-
-# Bundle edge Rails instead:
-# gem 'rails',     :git => 'git://github.com/rails/rails.git'
-
-gem 'sqlite3'
-
+gem 'less-rails-bootstrap'
 gem 'json'
+
+group :development, :test do
+  gem 'sqlite3'
+  gem 'execjs'
+  gem 'therubyracer'
+  gem 'rspec-rails'
+  gem 'watchr'
+  gem 'spork', '~> 0.9.0.rc'
+  gem 'annotate', :git => 'git://github.com/ctran/annotate_models.git'
+end
 
 # Gems used only for assets and not required
 # in production environments by default.

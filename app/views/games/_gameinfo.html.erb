@@ -1,0 +1,22 @@
+<div class="alert-message info">
+	<p><strong>Game status:</strong></p>
+	<p><span><%= @g.status %></span></p>
+	<% if @g.has_started %>
+		<p><%= @g.next_move_for(@u) %></p>
+	<% end %>
+</div>
+<h4><%= pluralize current_players.count, 'player' %></h4>
+<% current_players.each do |u| %>
+	<div class="user-div alert-message block-message <%= u.locked_in? ? 'success' : 'warning' %>">
+		<p class="<%= u.is_admin? ? 'admin':'' %>">
+			<strong>
+				<%= u.name %>
+				<%= @u.id == u.id ? '(Me)' : '' %>
+			</strong>
+		<span><%= u.status %></span></p>
+		<% if @g.has_started? and u.locked_in? %>
+			<p>Score: <strong><%= u.score %></strong></p>
+			<p>Lost: <strong><%= u.lost_cells.size %>/14</strong></p>
+		<% end %>
+	</div>
+<% end %>

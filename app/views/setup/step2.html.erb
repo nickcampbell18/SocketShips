@@ -1,0 +1,78 @@
+<style type="text/css">
+	#yourShips td {
+		width: 10px;
+		height: 10px;
+	}
+	td.occupied {
+		background-color: #08b5fb;
+	}
+	#currently_selected {
+		//display: none;
+	}
+	td.highlighted {
+		background-color: #46a546;
+	}
+</style>
+<ul class="breadcrumb">
+	<li><a href="/step1">Step 1: Get invite link</a> <span class="divider">/</span></li>
+	<li class="active">Step 2: Setup ships</li>
+</ul>
+<script type="text/javascript">
+var takenCells = <%= @p.occupied_cells_as_js %>;
+</script>
+<%= javascript_include_tag "setup" %>
+
+<% if @p.is_ready? %>
+	<div class="alert-message block-message success">
+		<p><strong>Ship placement is complete</strong></p>
+		<p>You are free to move your ships around as much as you like, however once you click this button your ships are locked in for the game.</p>
+		<div class="alert-actions">
+			<a class="btn primary" href="/lock">Lock my ships, I'm ready to play!</a>
+		</div>
+	</div>
+<% else %>
+	<div class="alert-message block-message info">
+		<p><strong>Please place your ships on the grid below</strong></p>
+		<p>Placement is simple: select your ship class and direction from the left, and select an area on the grid for placement. You may not overlap your ships, or place them outside the grid.</p>
+		<p>When you have placed all 5 ships correctly, you can start the game.</p>
+	</div>
+<% end %>
+
+	<div class="alert-message warning">
+		<span id="information">You have placed <%= @p.ships.count %> of 5 ships</span>
+	</div>
+
+<div class="row">
+	<div class="span3">
+		<form method="post">
+			<h2>Boats</h2>
+			<ul class="inputs-list">
+				<%= ship_picker([]) %>
+			</ul>
+		<div id="currently_selected" class="clearfix">
+			<h2>Direction</h2>
+				<input type="hidden" id="sLength" name="selectedLength" value="" />
+				<ul class="inputs-list">
+					<li><label><input type="radio" name="orientation" value="S" checked> <span>Down</span></label></li>
+					<li><label><input type="radio" name="orientation" value="E"> <span>Across</span></label></li>
+				</ul>
+		</div>
+		<div class="input">
+			<input id="tokentag" type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
+			<input type="hidden" name="ship[home]" id="submitHome">
+			<input type="hidden" name="ship[length]" id="submitLength">
+			<input type="hidden" name="ship[vector]" id="submitVector">
+			<input type="submit" style="display:none" id="submitShip">
+		</div>
+		</form>
+	</div>
+
+	<div class="span9">
+		<table id="yourShips">
+			<%= grid_picker(@p) %>
+		</table>
+	</div>
+
+</div>
+
+

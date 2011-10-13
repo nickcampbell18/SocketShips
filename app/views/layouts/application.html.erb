@@ -1,34 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Socketships</title>
+  <title>Rubyships</title>
+  <%= stylesheet_link_tag "application" %>
+  <%= javascript_include_tag "application" %>
+  <script src="http://js.pusherapp.com/1.9/pusher.min.js"></script>
   <%= csrf_meta_tags %>
   <style>
-    #game-log span {
-      display: block;
-    }
-    #game-log abbr {
-      font-size: 70%;
-    }
+	body { padding-top: 40px; background-color: #eee }
+	.content {
+	      background-color: #fff;
+	      padding: 20px;
+	      margin: 0 -20px;}
+	#current {
+		background: transparent url(<%= asset_path "person-icon.svg" %>) no-repeat left center;
+		padding-left: 30px;
+		color: white;
+	}
   </style>
 </head>
 <body>
-<%= yield %>
-<div id="game-log">
-  <% Message.all.each do |m| %>
-    <div class="<%= m.priority == 1 ? 'success' : 'info' %>">
-      <abbr class="timeago" title="<%= m.created_at.to_time.iso8601 %>"><%= m.created_at.to_time.iso8601 %></abbr>
-      <span><%= m.message %></span>
-    </div>
-  <% end %>
-</div>
 
-<%= stylesheet_link_tag "application" %>
-<%= javascript_include_tag "application" %>
-  <script>
-    jQuery("abbr.timeago").timeago();
-  </script>
-<input type="button" id="firebtn" onclick="this.disabled=true" value="Fire" disabled="disabled" />
-<script src="http://js.pusherapp.com/1.9/pusher.min.js"></script>
+	<div class="topbar">
+		<div class="fill">
+			<div class="container">
+				<a class="brand" href="/">Rubyships!</a>
+				<ul class="nav">
+					<li class="active"><a href="/">Home</a></li>
+				</ul>
+				<div class="pull-right">
+				<% if logged_in? %>
+					<p id="current"><em><%= current_player.name %></em>
+							<a href="/logout">Logout</a>
+						</p>
+					<% else %>
+						<form method="post" action="/u/"  class="pull-right">
+							<input type="text" size="30" class="large" name="uuid" placeholder="Paste user code" />
+							<button class="btn" type="submit">Login</button>
+						</form>
+				<% end %>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="content">
+			<% if flash[:alert] %>
+		  <div class="alert-message error fade in" data-alert="alert">
+		    <p><%= flash[:alert] %></p>
+		  </div>
+		<% end %>
+		<% if flash[:notice] %>
+		  <div class="alert-message warning">
+		    <p><%= flash[:notice] %></p>
+		  </div>
+		<% end %>
+		
+		<%= yield %> 
+			
+		</div>
+	</div>
+	
+	<footer>
+		<ul class="nav">
+		</ul>
+	</footer>
 </body>
 </html>

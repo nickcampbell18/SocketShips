@@ -1,0 +1,108 @@
+<div class="page-header">
+	<h1><%= @g.name %></h1>
+</div>
+<style>
+#yourShips td.occupied {
+	background-color: blue;
+}
+#yourShips td.lost {
+	background-color: red!important;
+}
+#theirShips td.fired {
+	background-color: yellow;
+}
+td.hit {
+	background-color: red!important;
+}
+#theirShips td.highlighted {
+	background-color: green;
+}
+</style>
+<script>
+showError = function(msg){
+	$("#information").html(msg);
+}
+shootAtCell = function(cell){
+	urly = '/shoot/' + cell
+	response = 0
+	$.ajax({type:'GET',url:urly, async: false, success: function(text){
+		response = text;
+	}});
+	cello = $('#theirShips td#' + cell)
+	if (response != -1){
+		cello.addClass("fired");
+		if (response == 1){
+			cello.addClass("hit");
+			showError("You hit their cell " + cell);
+		} else {
+			showError("That was a miss..");
+		}
+	} else {
+		showError("It isn't your turn.")
+	}
+	};
+var get_shots_json = setInterval(function(){
+	$.getJSON('/shots.json', function(data) {
+		// YourShips
+		clear_table_classes('yourShips');
+		$(data['occupied']).each(function(i,cell){
+			fill_cells_by_class('yourShips',cell,'occupied');
+		});
+		$(data['lost']).each(function(i,cell){
+			fill_cells_by_class('yourShips',cell,'lost');
+		});
+		// TheirShips
+		clear_table_classes('theirShips');
+		$(data['fired']).each(function(i,cell){
+			fill_cells_by_class('theirShips',cell,'fired');
+		});
+		$(data['hit']).each(function(i,cell){
+			fill_cells_by_class('theirShips',cell,'hit');
+		});
+		$('#gameinfo').load('/gameinfo');
+	});
+},3000);
+
+var clear_table_classes = function(table){
+	$("#" + table).find("td").removeClass();
+}
+
+var fill_cells_by_class = function(table, cell, classs){
+	$("#" + table + " #" + cell).addClass(classs);
+}
+
+$(document).ready(function(){
+		$("#theirShips td.nofire").mouseenter(function(){
+		$(this).addClass("highlighted");
+	});
+	$("#theirShips td.nofire").mouseleave(function(){
+		$(this).removeClass("highlighted");
+	});
+	$("#theirShips td.nofire").click(function(){
+		shootAtCell(this.id);
+	});
+});
+</script>
+<div class="row">
+	<div class="alert-message information span16">
+		<span id="information"></span>
+	</div>
+</div>
+<div class="row">
+	<div class="span6">
+		<h4>Your ships</h4>
+		<table id="yourShips">
+			<%= grid_picker(@u) %>
+		</table>
+	</div>
+
+	<div class="span6">
+		<h4>Shooting at <%= @u.other_player.name %></h4>
+		<table id="theirShips">
+			<%= picker_for_enemy(@u) %>
+		</table>
+	</div>
+	<div class="span4" id="gameinfo">
+		<%= render "games/gameinfo" %>
+	</div>
+</div>
