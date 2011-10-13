@@ -25,7 +25,7 @@ $(function() {
     logger(data.time, data.str);
   });
   channel.bind('ready', function(d){
-    alert("Ready to move..");
+    $("input#firebtn").attr('disabled',false);
   });
 });
 var u = 1;
