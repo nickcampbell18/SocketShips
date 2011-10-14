@@ -12,6 +12,9 @@
 	td.highlighted {
 		background-color: #46a546;
 	}
+	#<%= @p.is_ready? ? "placing_ships_info" : "ready_to_play" %> {
+	  display: none;
+  }
 </style>
 <ul class="breadcrumb">
 	<li><a href="/step1">Step 1: Get invite link</a> <span class="divider">/</span></li>
@@ -19,27 +22,25 @@
 </ul>
 <script type="text/javascript">
 var takenCells = <%= @p.occupied_cells_as_js %>;
+var ready = <%= @p.is_ready? %>
 </script>
 <%= javascript_include_tag "setup" %>
 
-<% if @p.is_ready? %>
-	<div class="alert-message block-message success">
+	<div id="ready_to_play" class="alert-message block-message success">
 		<p><strong>Ship placement is complete</strong></p>
 		<p>You are free to move your ships around as much as you like, however once you click this button your ships are locked in for the game.</p>
 		<div class="alert-actions">
 			<a class="btn primary" href="/lock">Lock my ships, I'm ready to play!</a>
 		</div>
 	</div>
-<% else %>
-	<div class="alert-message block-message info">
+	<div id="placing_ships_info" class="alert-message block-message info">
 		<p><strong>Please place your ships on the grid below</strong></p>
 		<p>Placement is simple: select your ship class and direction from the left, and select an area on the grid for placement. You may not overlap your ships, or place them outside the grid.</p>
 		<p>When you have placed all 5 ships correctly, you can start the game.</p>
 	</div>
-<% end %>
 
 	<div class="alert-message warning">
-		<span id="information">You have placed <%= @p.ships.count %> of 5 ships</span>
+		<span id="information">You have placed <%= @p.ships.count %> of 4 ships</span>
 	</div>
 
 <div class="row">
@@ -47,7 +48,7 @@ var takenCells = <%= @p.occupied_cells_as_js %>;
 		<form method="post">
 			<h2>Boats</h2>
 			<ul class="inputs-list">
-				<%= ship_picker([]) %>
+				<%= ship_picker(@p.used_ships) %>
 			</ul>
 		<div id="currently_selected" class="clearfix">
 			<h2>Direction</h2>

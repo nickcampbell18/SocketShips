@@ -19,6 +19,7 @@ class Player < ActiveRecord::Base
   end
 
   def is_ready?
+    ships.count == 4
   end
 
   def is_playing?
@@ -27,13 +28,16 @@ class Player < ActiveRecord::Base
   def shoot(cell)
   end
 
-  def place_ship(opts = {})
-  end
-  
   def occupied_cells
     c = []
     ships.each { |s| c << s.cells }
     c.flatten!
+  end
+  
+  def used_ships
+    u = []
+    ships.each { |s| u << s.length }
+    u
   end
   
   def occupied_cells_as_js

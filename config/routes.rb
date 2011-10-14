@@ -6,6 +6,7 @@ Socketships::Application.routes.draw do
   match '/step1' => 'setup#step1'
   match '/step2' => 'setup#step2'
   match '/place/ship' => 'setup#place_ship'
+  match '/remove/ship' => 'setup#remove_ship'
   match '/remove/ship-:length' => 'setup#remove_ship'
 
   # Playing

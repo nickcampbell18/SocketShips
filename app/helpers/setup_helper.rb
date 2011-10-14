@@ -7,20 +7,14 @@ module SetupHelper
 			"Destroyer" => 3,
 			"Submarine" => 2}
 
-  def ship_picker(used = [])
+  def ship_picker(used)
     list = ''
     SHIP_NAMES.invert.sort{|a,b|b<=>a}.each do |s,n|
-      taken = used.member?(s)
-      cls = taken ? 'taken' : 'available'
-      list << "<li><label><input type='radio' name='shipclass' value='#{s}'"
-      # '<a href='#' class='ship-#{cls} ship-unselected' id='ship-#{s}' data-length='#{s}' data-name='#{n}'>"
-      if used.member?(s)
-        list << " disabled><a class='close' href='/remove/ship-#{s}'>x</a>" 
-      else
-        list << ">"
-      end
+      list << "<li><label id='ship-#{s}'><input type='radio' name='shipclass' value='#{s}'"
+      list << (used.member?(s) ? " disabled><a class='close' data-length='#{s}'>x</a>" : ">")
       list << " <span>#{n} (#{s})</span></label></li>"
     end
+    list << "<li style='display:none'><input type='radio' name='shipclass' value='0' /></li>"
     list.html_safe
   end
 

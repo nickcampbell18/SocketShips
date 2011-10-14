@@ -51,9 +51,13 @@ class SetupController < ApplicationController
 	end
 
 	def remove_ship
-		s = @p.ships.find_by_length(params[:length])
-		s.destroy unless s.blank?
-		redirect_to :step2
+		s = @p.ships.where(:length => params[:length])
+		unless s.empty?
+		  render :json => s.first.cells
+		  s.first.destroy
+	  else
+	    render :json => false
+    end
 	end
 	
 	def place_ship

@@ -1,42 +1,52 @@
-$(document).ready(function(){
-  var ship, vec, home
-	$("input:radio[name=shipclass][disabled=false]:first").attr('checked', true)
-	$(".ship-available").click(function(){
-		$("#sLength").val($(this).data('length'))
-	}); // ship-available
-	$(".ship-taken").click(function(){
-		// Remove
-	}); //ship-taken
-	$(".available").hover(function(){
-		row = $(this).data('row')
-		col = $(this).data('col')
-		ship = $("input:radio[name=shipclass]:checked").val();
-		vec = $("input:radio[name=orientation]:checked").val();
-		if (ship != ''){
-			highlightCells(col, row,vec,ship);
-		} else {
-		  showError('Please select a ship first');
-	  }
-	});
-	$(".available").click(function(){
-	   $.ajax({url:"/place/ship", 
-	    data: {home : this.id, vector: vec, length: ship},
-	    success : function(response){
-	      if (response == true){
-	        lockShip(home,vec,length);
-        } else {
-	        alert("Failed to place ship")
-	      }
+recheckShips = function(){
+  $("input:radio[name=shipclass][disabled=false]:first").attr('checked', true);
+  setReady($("input:radio[name=shipclass][disabled=true]").size() == 4);
+}
+
+setReady = function(r){
+  if (r == true){
+    $("#ready_to_play").css("display", 'block');
+    $("#placing_ships_info").css("display", "none");
+  } else {
+    $("#ready_to_play").css("display", "none");
+    $("#placing_ships_info").css("display", "block");
+  }
+  ready = r;
+}
+
+connectCloseButtons = function(){
+  $(".inputs-list a.close").click(function(){
+    l = $(this).data('length');
+    $.ajax({url:"/remove/ship",
+      data: {length: l},
+      success : function(response){
+        if (response != false) {
+          removeShip(l, response);
+        }
       }
-	    });
     });
-}); // document-ready
+  });
+}
 
 lockShip = function(home,vec,length){
-  c = returnCellsShort(home, vec, length);
-  $.each(c, function(cell) {
-    alert(cell);
+  c = returnCells(home, vec, length);
+  $.each(c, function(i,cell) {
+    $('#' + cell).addClass("occupied");
   });
+  $("#ship-"+length+" input").attr('disabled',true);
+  recheckShips();
+  $("#ship-"+length).append("<a class='close' data-length='"+length+"'>x</a>");
+  connectCloseButtons();
+}
+
+removeShip = function(len,cells){
+  $.each(cells, function(i,c){
+    $("#"+c).removeClass("occupied");
+  });
+  $("#ship-"+len+" input").attr('disabled', false);
+  $("#ship-"+len+" a.close").remove();
+  recheckShips();
+  connectCloseButtons();
 }
 
 clearHighlighting = function(){
@@ -61,7 +71,7 @@ highlightCells = function(col, row, vec, size){
   clearHighlighting();
   cell = (col+row);
 	showConfirm(cell,size);
-  cells = returnCells(col, row, vec, size);
+  cells = returnCells(cell, vec, size);
   for(i=0;i<cells.length;i++){
     x = cells[i];
     if(checkOverlapping(x) > 0) {
@@ -77,11 +87,8 @@ highlightCells = function(col, row, vec, size){
 		}
   }
 }
-returnCells = function(col, row, vec, size){
-  return returnCellsShort((col+row), vec, size);
-}
 
-returnCellsShort = function(cell, vec, size){
+returnCells = function(cell, vec, size){
   cells = new Array();
 	switch(vec){
 		case 'E':
@@ -100,3 +107,41 @@ returnCellsShort = function(cell, vec, size){
 	}
 	return cells;
 }
+
+var startSetup = function(){
+  var ship, vec, home
+  recheckShips();
+  connectCloseButtons();
+  if (!ready){ // READY
+    $(".inputs-list input[disabled=false]").click(function(){
+	    ship = $(this).data('length');
+    }); // ship-available
+    $(".available").hover(function(){
+	    row = $(this).data('row')
+	    col = $(this).data('col')
+	    vec = $("input:radio[name=orientation]:checked").val();
+	    ship = $("input:radio[name=shipclass]:checked").val();
+	    if (ship != ''){
+		    highlightCells(col, row, vec, ship);
+	    } else {
+	      showError('Please select a ship first');
+      }
+    });
+    $(".available").click(function(){
+      vec = $("input:radio[name=orientation]:checked").val();
+      ship = $("input:radio[name=shipclass]:checked").val();
+      $.ajax({url:"/place/ship", 
+        data: {home : this.id, vector: vec, length: ship},
+        success : function(response){
+          if (response == true){
+            lockShip(home,vec,ship);
+          }
+        }
+      });
+    });
+  }
+}
+
+$(document).ready(function(){
+  startSetup();
+});

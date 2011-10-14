@@ -12,7 +12,6 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'watchr'
   gem 'spork', '~> 0.9.0.rc'
-  gem 'annotate', :git => 'git://github.com/ctran/annotate_models.git'
 end
 
 # Gems used only for assets and not required
