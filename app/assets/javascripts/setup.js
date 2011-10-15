@@ -28,12 +28,12 @@ connectCloseButtons = function(){
   });
 }
 
-lockShip = function(home,vec,length){
-  c = returnCells(home, vec, length);
-  $.each(c, function(i,cell) {
+lockShip = function(cells,length){
+  $.each(cells, function(i,cell) {
     $('#' + cell).addClass("occupied");
   });
-  $("#ship-"+length+" input").attr('disabled',true);
+  s = $("#ship-"+length+" input")
+  s.attr('disabled',true);
   recheckShips();
   $("#ship-"+length).append("<a class='close' data-length='"+length+"'>x</a>");
   connectCloseButtons();
@@ -47,16 +47,13 @@ removeShip = function(len,cells){
   $("#ship-"+len+" a.close").remove();
   recheckShips();
   connectCloseButtons();
+  startSetup();
 }
 
 clearHighlighting = function(){
 	$('#yourShips').find("td.highlighted").each(function(){
 		$(this).removeClass("highlighted");
 	});
-}
-
-checkOverlapping = function(cell){
-  return $.inArray(cell, takenCells) >= 0
 }
 
 showError = function(msg){
@@ -70,11 +67,13 @@ showConfirm = function(cell,ship){
 highlightCells = function(col, row, vec, size){
   clearHighlighting();
   cell = (col+row);
-	showConfirm(cell,size);
+  if (size > 0) {
+  	showConfirm(cell,size);
+	}
   cells = returnCells(cell, vec, size);
   for(i=0;i<cells.length;i++){
     x = cells[i];
-    if(checkOverlapping(x) > 0) {
+    if($("#"+x).hasClass("occupied")) {
       showError("Ships are overlapping");
       clearHighlighting();
       return false;
@@ -130,11 +129,12 @@ var startSetup = function(){
     $(".available").click(function(){
       vec = $("input:radio[name=orientation]:checked").val();
       ship = $("input:radio[name=shipclass]:checked").val();
+      xhome = this.id
       $.ajax({url:"/place/ship", 
-        data: {home : this.id, vector: vec, length: ship},
-        success : function(response){
-          if (response == true){
-            lockShip(home,vec,ship);
+        data: {home : xhome, vector: vec, length: ship},
+        success : function(r){
+          if (r != false){
+            lockShip(r.cells, ship);
           }
         }
       });

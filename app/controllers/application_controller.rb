@@ -27,8 +27,9 @@ class ApplicationController < ActionController::Base
         t :lost_their_ship, vars
     end
     tmp = {:time => Time.now.iso8601, :str => str }
+    uuid = current_player.uuid
     Pusher["private-#{uuid}"].trigger(type, tmp)
-    @p.messages.create(:message => str, :priority => vars[:priority])
+    #@p.messages.create(:message => str, :priority => vars[:priority])
     render :nothing => true
   end
 

@@ -19,7 +19,7 @@ class Ship < ActiveRecord::Base
   before_save :is_validly_placed?
   
   def is_validly_placed?
-      cells ? true: false rescue false #Catches bad placement
+      v = cells ? true: false rescue false #Catches bad placement#
   end
   
   def cells

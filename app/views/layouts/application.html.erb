@@ -5,6 +5,10 @@
   <%= stylesheet_link_tag "application" %>
   <%= javascript_include_tag "application" %>
   <script src="http://js.pusherapp.com/1.9/pusher.min.js"></script>
+  <% if logged_in? %>
+    <script type="text/javascript">var pushKey = '<%= current_player.uuid %>';</script>
+    <%= javascript_include_tag "push" %>
+  <% end %>
   <%= csrf_meta_tags %>
   <style>
 	body { padding-top: 40px; background-color: #eee }
@@ -63,6 +67,8 @@
 	</div>
 	
 	<footer>
+	  <div id="game-log">
+	  </div>
 		<ul class="nav">
 		</ul>
 	</footer>

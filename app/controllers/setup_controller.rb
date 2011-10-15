@@ -63,8 +63,7 @@ class SetupController < ApplicationController
 	def place_ship
 	  l,h,v = [params[:length], params[:home], params[:vector]]
 	  s = @p.ships.create(:length => l, :home => h, :vector => v)
-	  puts s
-	  render :json => s.valid?
+	  render :json => (s.valid? ? {:cells => s.cells} : false)
 	end
 
 	def enter_from_user

@@ -1,9 +1,8 @@
 class NotificationController < ApplicationController
-
   protect_from_forgery :except => :auth
   
   def auth
-    if true
+    if logged_in?
       response = Pusher[params[:channel_name]].authenticate(params[:socket_id])
       render :json => response
     else
