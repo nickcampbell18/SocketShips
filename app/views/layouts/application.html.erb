@@ -16,11 +16,26 @@
 	      background-color: #fff;
 	      padding: 20px;
 	      margin: 0 -20px;}
-	#current {
-		background: transparent url(<%= asset_path "person-icon.svg" %>) no-repeat left center;
+	.topbar .pull-right p {
+	  display: inline;
 		padding-left: 30px;
 		color: white;
 	}
+	.topbar .pull-right p.game {
+	  		background: transparent url(<%= asset_path "game_pad_22.png" %>) no-repeat left center;
+	}
+	.topbar .pull-right p.user {
+	  		background: transparent url(<%= asset_path "person-icon.svg" %>) no-repeat left center;
+	}
+	.topbar .pull-right span {
+	  margin: 0 17px;
+	  color: #C0C0C0;
+	  font-style: italic;
+  }
+	.inputs-list li a.close {
+	  color: red;
+	  opacity: 0.5;
+  }
   </style>
 </head>
 <body>
@@ -34,10 +49,18 @@
 				</ul>
 				<div class="pull-right">
 				<% if logged_in? %>
-					<p id="current"><em><%= current_player.name %></em>
-							<a href="/logout">Logout</a>
-						</p>
-					<% else %><!--
+				  <p class="game"><%= current_game.name %></p>
+				  <span>between</span>
+				  <p class="user">
+					  <%= current_player.name %>
+					</p>
+					<% if two_players? %>
+					  <span>and</span>
+					  <p class="user">
+						  <%= other_player.name %>
+					  </p>
+					<% end %>
+				<% else %><!--
 						<form method="post" action="/u/"  class="pull-right">
 							<input type="text" size="30" class="large" name="uuid" placeholder="Paste user code" />
 							<button class="btn" type="submit">Login</button>
@@ -62,19 +85,20 @@
 		<% end %>
 		
 		<%= yield %> 
-			
+
+		<% if logged_in? %>
 			<div id="game-log">
-  <% @p.messages.limit(5).each do |m| %>
-    <div class="alert-message <%= m.priority == 1 ? 'error' : 'info' %>">
-      <span><%= m.message %></span>
-      <abbr class="timeago pull-right" title="<%= m.created_at.to_time.iso8601 %>"><%= m.created_at.to_time.iso8601 %></abbr>
-    </div>
-  <% end %>
-</div>
-  <script>
-    jQuery("abbr.timeago").timeago();
-  </script>
-<input type="button" id="firebtn" onclick="this.disabled=true" value="Fire" disabled="disabled" />
+      <% @p.messages.limit(5).each do |m| %>
+        <div class="alert-message <%= m.priority == 1 ? 'error' : 'info' %>">
+          <span><%= m.message %></span>
+          <abbr class="timeago pull-right" title="<%= m.created_at.to_time.iso8601 %>"><%= m.created_at.to_time.iso8601 %></abbr>
+        </div>
+      <% end %>
+      </div>
+        <script>
+          jQuery("abbr.timeago").timeago();
+        </script>
+    <% end %>
 		</div>
 	</div>
 	

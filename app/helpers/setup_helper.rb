@@ -11,7 +11,7 @@ module SetupHelper
     list = ''
     SHIP_NAMES.invert.sort{|a,b|b<=>a}.each do |s,n|
       list << "<li><label id='ship-#{s}'><input type='radio' name='shipclass' value='#{s}'"
-      list << (used.member?(s) ? " disabled><a class='close' data-length='#{s}'>x</a>" : ">")
+      list << (used.member?(s) ? " disabled><a class='close' title='Remove this ship' data-length='#{s}'>x</a>" : ">")
       list << " <span>#{n} (#{s})</span></label></li>"
     end
     list << "<li style='display:none'><input type='radio' name='shipclass' value='0' /></li>"

@@ -31,6 +31,14 @@ module ApplicationHelper
   def current_game
     current_player.game
   end
+  
+  def two_players?
+    current_game.players.count == 2
+  end
+  
+  def other_player
+    current_game.players.where("uuid != ?", session[:player]).first
+  end
 
   def logged_in?
     session[:player].nil? ? false : true

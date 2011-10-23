@@ -35,7 +35,7 @@ lockShip = function(cells,length){
   s = $("#ship-"+length+" input")
   s.attr('disabled',true);
   recheckShips();
-  $("#ship-"+length).append("<a class='close' data-length='"+length+"'>x</a>");
+  $("#ship-"+length).append("<a class='close' title='Remove this ship' data-length='"+length+"'>x</a>");
   connectCloseButtons();
 }
 
