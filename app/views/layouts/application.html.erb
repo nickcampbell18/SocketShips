@@ -37,11 +37,11 @@
 					<p id="current"><em><%= current_player.name %></em>
 							<a href="/logout">Logout</a>
 						</p>
-					<% else %>
+					<% else %><!--
 						<form method="post" action="/u/"  class="pull-right">
 							<input type="text" size="30" class="large" name="uuid" placeholder="Paste user code" />
 							<button class="btn" type="submit">Login</button>
-						</form>
+						</form>-->
 				<% end %>
 				</div>
 			</div>
@@ -63,14 +63,22 @@
 		
 		<%= yield %> 
 			
+			<div id="game-log">
+  <% @p.messages.limit(5).each do |m| %>
+    <div class="alert-message <%= m.priority == 1 ? 'error' : 'info' %>">
+      <span><%= m.message %></span>
+      <abbr class="timeago pull-right" title="<%= m.created_at.to_time.iso8601 %>"><%= m.created_at.to_time.iso8601 %></abbr>
+    </div>
+  <% end %>
+</div>
+  <script>
+    jQuery("abbr.timeago").timeago();
+  </script>
+<input type="button" id="firebtn" onclick="this.disabled=true" value="Fire" disabled="disabled" />
 		</div>
 	</div>
 	
-	<footer>
-	  <div id="game-log">
-	  </div>
-		<ul class="nav">
-		</ul>
-	</footer>
+
+<script src="http://js.pusherapp.com/1.9/pusher.min.js"></script>
 </body>
 </html>

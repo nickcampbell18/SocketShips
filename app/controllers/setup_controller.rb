@@ -1,6 +1,7 @@
 class SetupController < ApplicationController
 
 	before_filter :require_uuid, :except => :home
+	before_filter :redirect_to_game, :only => [:step1, :step2]
 
 	def home
 		if session[:player]
@@ -23,23 +24,9 @@ class SetupController < ApplicationController
 	end
 
 	def step1
-		# Only admins get here so...
-		redirect_to "/game" if @g.started?
 	end
 
 	def step2
-		redirect_to "/game" if @g.started?
-		if request.post?
-			# Make that ship mofo
-			flash.now[:alert] = "That ship was invalid" unless @p.create_ship?(params[:ship])
-			@p.ships.reload
-		end
-	end
-
-	def lock
-		@p.locked = true
-		@p.save
-		redirect_to "/game"
 	end
 
 	def start_game
@@ -88,6 +75,12 @@ class SetupController < ApplicationController
 				flash.now[:alert] = "Sorry, that name is already taken, or the game has already started."
 			end
 		end
+	end
+
+	private
+
+	def redirect_to_game
+	  redirect_to '/game' if @g.started?
 	end
 
 end

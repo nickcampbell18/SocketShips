@@ -11,23 +11,23 @@ class NotificationController < ApplicationController
   end
   
   def hit_own_ship()
-    ping "nick", "hit_own_ship", {:ship => "Destroyer", :cell => "G3", :priority => 2}
+    ping "hit_own_ship", params #ship, cell
   end
   
-  def hit_their_ship(ship = 'Battleship', cell = 'B3')
-    ping "nick", "hit_their_ship", {:ship => ship, :cell => cell, :priority => 2}
+  def hit_their_ship
+    ping "hit_their_ship", params #ship, cell
   end
   
-  def lost_own_ship(ship = 'Battleship')
-    ping "nick", "lost_own_ship", {:ship => ship, :priority => 1}
+  def lost_own_ship
+    ping "lost_own_ship", params #ship
   end  
 
-  def lost_their_ship(ship = 'Destroyer')
-    ping "nick", "lost_their_ship", {:ship => ship, :priority => 1}
+  def lost_their_ship
+    ping "lost_their_ship", params #ship
   end
   
   def ready_to_move
-    json_notify "nick", "ready"
+    notify "ready"
   end
   
   

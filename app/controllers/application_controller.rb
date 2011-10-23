@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
 		redirect_to :home
 	end
 	
-  def ping(uuid, type, vars = {})
+  def ping(type, vars = {})
     str = case type
       when "hit_own_ship"
         t :hit_own_ship, vars
@@ -26,15 +26,15 @@ class ApplicationController < ActionController::Base
       when "lost_their_ship"
         t :lost_their_ship, vars
     end
-    tmp = {:time => Time.now.iso8601, :str => str }
-    uuid = current_player.uuid
-    Pusher["private-#{uuid}"].trigger(type, tmp)
-    #@p.messages.create(:message => str, :priority => vars[:priority])
+    priority = type.match(/own/).nil? ? 2 : 1 #i.e. own = 1 for top-priority
+    tmp = {:time => Time.now.iso8601, :str => str, :priority => priority}
+    Pusher["private-#{current_player.uuid}"].trigger(type, tmp)
+    current_player.messages.create(:message => str, :priority => priority)
     render :nothing => true
   end
 
-  def notify(uuid, action)
-    Pusher["private-#{uuid}"].trigger(action,nil)
+  def notify(action)
+    Pusher["private-#{current_player.uuid}"].trigger(action,nil)
     render :nothing => true
   end
 
